@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  mongodb1:
+    image: mongo:6.0
+    environment:
+      MONGO_INITDB_DATABASE: test
+    networks:
+      - mongodb-network
+    ports:
+      - "27021:27017"
+    links:
+      - mongodb2
+      - mongodb3
+    restart: always
+    entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "dbrs" ]
+  mongodb2:
+    image: mongo:6.0
+    networks:
+      - mongodb-network
+    ports:
+      - "27022:27017"
+    restart: always
+    entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "dbrs" ]
+  mongodb3:
+    image: mongo:6.0
+    networks:
+      - mongodb-network
+    ports:
+      - "27023:27017"
+    restart: always
+    entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "dbrs" ]
+
+networks:
+  mongodb-network:
+    driver: bridge
